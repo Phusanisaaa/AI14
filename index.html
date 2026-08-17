@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Machine Learning Visualizer</title>
+
+  <style>
+    :root {
+      --bg: #08101f;
+      --panel: #101a30;
+      --line: #253657;
+      --text: #edf3ff;
+      --muted: #94a4c4;
+      --accent: #67d8ff;
+      --purple: #9b8cff;
+      --pink: #ff6fae;
+      --green: #65e6a4;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 80% 0%, #18254a 0, #08101f 45%);
+      color: var(--text);
+      font: 14px Inter, system-ui, Segoe UI, sans-serif;
+    }
+    .content {
+      max-width: 1400px;
+      margin: auto;
+      padding: 30px;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(103, 216, 255, 0.09), rgba(155, 140, 255, 0.08));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 35px;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: 34px;
+      margin: 0 0 10px;
+    }
+    .gradient {
+      background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      max-width: 800px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      background: linear-gradient(180deg, #111d34, #0d172a);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .stat-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .stat-number {
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .section-title {
+      margin: 28px 0 12px;
+      font-size: 18px;
+    }
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+    .algorithms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+    .algorithm-card {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      background: linear-gradient(180deg, #111d34, #0d172a);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      transition: 0.18s;
+    }
+    .algorithm-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 15px 35px #0005;
+    }
+    .algorithm-icon {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      background: #172846;
+      font-size: 20px;
+      margin-bottom: 13px;
+    }
+    .algorithm-card h3 {
+      font-size: 16px;
+      margin: 0 0 6px;
+    }
+    .algorithm-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      min-height: 36px;
+    }
+    .open-text {
+      display: block;
+      margin-top: 14px;
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .footer {
+      text-align: center;
+      color: #627598;
+      font-size: 11px;
+      padding: 30px;
+    }
+    @media(max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .content { padding: 18px; }
+      .hero { padding: 25px; }
+      .hero h1 { font-size: 27px; }
+    }
+    @media(max-width: 500px) {
+      .stats { grid-template-columns: 1fr; }
+      .algorithms { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+  <div class="content">
+    <section class="hero">
+      <h1>Machine Learning <span class="gradient">Visualizer</span></h1>
+      <p>Interactive educational platform for visualizing data points, model learning, training steps, predictions and parameter tuning across 14 machine learning algorithms.</p>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-icon">🧠</div>
+        <div class="stat-number">14</div>
+        <div class="stat-label">Algorithms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">📚</div>
+        <div class="stat-number">4</div>
+        <div class="stat-label">Learning Categories</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-number">14+</div>
+        <div class="stat-label">Interactive Visualizers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">⚙️</div>
+        <div class="stat-number">Tuning</div>
+        <div class="stat-label">Parameter Optimization</div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Supervised Learning <span>Learn from labeled data</span></h2>
+    <div class="algorithms">
+      <a class="algorithm-card" href="01-linear-regression.html">
+        <div class="algorithm-icon">📈</div>
+        <h3>Linear Regression</h3>
+        <p>Fits a continuous target using a learned linear relationship.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="02-logistic-regression.html">
+        <div class="algorithm-icon">🔵</div>
+        <h3>Logistic Regression</h3>
+        <p>Binary classification with probabilities and a sigmoid decision rule.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="03-knn.html">
+        <div class="algorithm-icon">🔎</div>
+        <h3>kNN</h3>
+        <p>Predicts from the nearest training examples.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="04-decision-tree.html">
+        <div class="algorithm-icon">🌳</div>
+        <h3>Decision Tree</h3>
+        <p>Learns hierarchical decision rules by splitting the feature space.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="05-random-forest.html">
+        <div class="algorithm-icon">🌲</div>
+        <h3>Random Forest</h3>
+        <p>Combines many randomized decision trees.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="06-svm.html">
+        <div class="algorithm-icon">⚡</div>
+        <h3>SVM</h3>
+        <p>Finds a maximum-margin decision boundary between classes.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="08-mlp.html">
+        <div class="algorithm-icon">🧠</div>
+        <h3>MLP (Neural Network)</h3>
+        <p>Visualizes neurons, layers, training and predictions.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="13-xgboost.html">
+        <div class="algorithm-icon">🚀</div>
+        <h3>XGBoost</h3>
+        <p>Gradient boosting with sequential decision trees.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="14-stacking.html">
+        <div class="algorithm-icon">🧩</div>
+        <h3>Stacking</h3>
+        <p>Combines base learners with a meta-model.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+    </div>
+
+    <h2 class="section-title">Unsupervised Learning <span>Discover hidden patterns</span></h2>
+    <div class="algorithms">
+      <a class="algorithm-card" href="07-kmeans.html">
+        <div class="algorithm-icon">🔵</div>
+        <h3>K-Means</h3>
+        <p>Clusters unlabeled points around learned centroids.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+    </div>
+
+    <h2 class="section-title">Deep Learning <span>Neural network architectures</span></h2>
+    <div class="algorithms">
+      <a class="algorithm-card" href="09-cnn.html">
+        <div class="algorithm-icon">🖼️</div>
+        <h3>CNN</h3>
+        <p>Visualizes convolution, feature extraction and classification.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="10-lstm.html">
+        <div class="algorithm-icon">🔗</div>
+        <h3>LSTM</h3>
+        <p>Visualizes sequence memory and recurrent gates.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+      <a class="algorithm-card" href="11-transformer.html">
+        <div class="algorithm-icon">🤖</div>
+        <h3>Transformer</h3>
+        <p>Visualizes tokens and self-attention.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+    </div>
+
+    <h2 class="section-title">Reinforcement Learning <span>Learn through rewards</span></h2>
+    <div class="algorithms">
+      <a class="algorithm-card" href="12-reinforcement-learning.html">
+        <div class="algorithm-icon">🎮</div>
+        <h3>Reinforcement Learning</h3>
+        <p>Visualizes an agent learning through actions and rewards.</p>
+        <span class="open-text">Open Visualizer →</span>
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    AI Machine Learning Visualizer<br>Interactive Educational Platform
+  </footer>
+</main>
+
+</body>
+</html>
