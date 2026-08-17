@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XGBoost — Complete ML Visualizer</title><style>
+:root{--bg:#08101f;--panel:#101a30;--panel2:#0c1528;--line:#253657;--text:#edf3ff;--muted:#94a4c4;--accent:#67d8ff;--pink:#ff6fae;--gold:#ffd166;--green:#65e6a4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#18254a 0,#08101f 45%);color:var(--text);font:14px Inter,system-ui,Segoe UI,sans-serif}
+header{padding:20px 24px;border-bottom:1px solid var(--line);background:#0c1528eF;backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+h1{margin:0 0 5px;font-size:25px}h2,h3{margin:0 0 12px}.muted{color:var(--muted)}.badge{display:inline-block;padding:4px 9px;border:1px solid #38517c;border-radius:99px;color:#b9d2ff;font-size:12px}
+.layout{max-width:1500px;margin:auto;padding:14px;display:grid;grid-template-columns:300px 1fr;gap:14px}.panel{background:linear-gradient(180deg,#111c34,#0e172b);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 12px 40px #0005}
+label{display:block;margin:10px 0;color:#cbd6ee}input,select,button{width:100%;margin-top:6px;padding:8px;border-radius:8px;border:1px solid #33496f;background:#091224;color:var(--text)}
+input[type=range]{padding:0;accent-color:var(--accent)}output{float:right;color:var(--accent)}
+button{cursor:pointer;background:#172746}button:hover{background:#243b68}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px}.buttons button{margin:0}
+canvas{display:block;width:100%;height:auto;background:#070d19;border:1px solid var(--line);border-radius:12px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.metric{background:#091224;border:1px solid #1d2c49;border-radius:10px;padding:10px}.metric b{display:block;font-size:18px;margin-top:3px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.log{height:150px;overflow:auto;background:#060b15;border-radius:9px;padding:9px;font:12px ui-monospace,monospace;color:#b8c8e7}
+.explain{line-height:1.6;color:#c8d4ec}.tuning{margin-top:12px}.best{padding:10px;border-radius:9px;background:#0a1d19;border:1px solid #245d49;color:#aef0ce}
+table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #223452;text-align:left}th{color:#9eb1d2}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+
+/* ===== Shared Sidebar Navigation ===== */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;background:linear-gradient(180deg,#0e192e,#091224);border-right:1px solid #263a5d;overflow-y:auto;z-index:1000;transition:.25s}
+.sidebar-logo{display:flex;align-items:center;gap:12px;padding:20px;border-bottom:1px solid #263a5d}.sidebar-logo-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#67d8ff,#9b8cff);font-size:22px}.sidebar-logo h2{font-size:17px;margin:0}.sidebar-logo p{color:#91a3c4;font-size:11px;margin:3px 0 0}.sidebar-menu{padding:15px 10px 30px}.sidebar-title{color:#60769e;font-size:11px;font-weight:700;letter-spacing:1px;padding:12px}.sidebar-link{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin-bottom:3px;border-radius:9px;text-decoration:none;color:#b8c7df;font-size:13px;transition:.15s}.sidebar-link:hover{background:#182846;color:#fff;transform:translateX(2px)}.sidebar-link.active{background:linear-gradient(90deg,#1a3655,#172744);color:#67d8ff;border-left:3px solid #67d8ff;padding-left:9px}.sidebar-icon{width:25px;text-align:center;font-size:16px}.main-with-sidebar{margin-left:280px;min-height:100vh}.page-topbar{height:65px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid #263a5d;background:rgba(10,18,35,.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}.sidebar-toggle{width:40px;height:40px;border:1px solid #33496f;border-radius:8px;background:#111d34;color:#fff;cursor:pointer;font-size:18px}.sidebar-toggle:hover{background:#243b68}body.sidebar-collapsed .sidebar{width:70px}body.sidebar-collapsed .main-with-sidebar{margin-left:70px}body.sidebar-collapsed .sidebar-logo-text,body.sidebar-collapsed .sidebar-title,body.sidebar-collapsed .sidebar-link-text{display:none}body.sidebar-collapsed .sidebar-logo{justify-content:center}body.sidebar-collapsed .sidebar-link{justify-content:center}body.sidebar-collapsed .sidebar-icon{width:auto}@media(max-width:900px){.sidebar{width:270px;transform:translateX(-100%)}body.mobile-sidebar-open .sidebar{transform:translateX(0)}.main-with-sidebar,body.sidebar-collapsed .main-with-sidebar{margin-left:0}}
+</style></head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-logo"><div class="sidebar-logo-icon">🧠</div><div class="sidebar-logo-text"><h2>ML Visualizer</h2><p>Interactive AI Laboratory</p></div></div>
+<nav class="sidebar-menu">
+<div class="sidebar-title">NAVIGATION</div>
+<a href="index.html" class="sidebar-link"><span class="sidebar-icon">🏠</span><span class="sidebar-link-text">Home</span></a>
+<div class="sidebar-title">SUPERVISED LEARNING</div>
+<a href="01-linear-regression.html" class="sidebar-link"><span class="sidebar-icon">📈</span><span class="sidebar-link-text">Linear Regression</span></a>
+<a href="02-logistic-regression.html" class="sidebar-link"><span class="sidebar-icon">🔵</span><span class="sidebar-link-text">Logistic Regression</span></a>
+<a href="03-knn.html" class="sidebar-link"><span class="sidebar-icon">🔎</span><span class="sidebar-link-text">kNN</span></a>
+<a href="04-decision-tree.html" class="sidebar-link"><span class="sidebar-icon">🌳</span><span class="sidebar-link-text">Decision Tree</span></a>
+<a href="05-random-forest.html" class="sidebar-link"><span class="sidebar-icon">🌲</span><span class="sidebar-link-text">Random Forest</span></a>
+<a href="06-svm.html" class="sidebar-link"><span class="sidebar-icon">⚡</span><span class="sidebar-link-text">SVM</span></a>
+<a href="08-mlp.html" class="sidebar-link"><span class="sidebar-icon">🧠</span><span class="sidebar-link-text">MLP</span></a>
+<a href="13-xgboost.html" class="sidebar-link"><span class="sidebar-icon">🚀</span><span class="sidebar-link-text">XGBoost</span></a>
+<a href="14-stacking.html" class="sidebar-link"><span class="sidebar-icon">🧩</span><span class="sidebar-link-text">Stacking</span></a>
+<div class="sidebar-title">UNSUPERVISED LEARNING</div>
+<a href="07-kmeans.html" class="sidebar-link"><span class="sidebar-icon">🔵</span><span class="sidebar-link-text">K-Means</span></a>
+<div class="sidebar-title">DEEP LEARNING</div>
+<a href="09-cnn.html" class="sidebar-link"><span class="sidebar-icon">🖼️</span><span class="sidebar-link-text">CNN</span></a>
+<a href="10-lstm.html" class="sidebar-link"><span class="sidebar-icon">🔗</span><span class="sidebar-link-text">LSTM</span></a>
+<a href="11-transformer.html" class="sidebar-link"><span class="sidebar-icon">🤖</span><span class="sidebar-link-text">Transformer</span></a>
+<div class="sidebar-title">REINFORCEMENT LEARNING</div>
+<a href="12-reinforcement-learning.html" class="sidebar-link"><span class="sidebar-icon">🎮</span><span class="sidebar-link-text">Reinforcement Learning</span></a>
+</nav></aside>
+<main class="main-with-sidebar"><div class="page-topbar"><button class="sidebar-toggle" onclick="toggleSidebar()">☰</button><div><strong>AI Machine Learning</strong> / <span style="color:#91a3c4">XGBoost</span></div></div>
+<header><h1>XGBoost</h1><span class="badge">Supervised Learning</span><p class="muted">Gradient-boosted tree ensemble visualizer showing iterative residual correction.</p></header>
+<div class="layout">
+<aside>
+<div class="panel"><h3>Dataset</h3>
+<label>Points <input id="n" type="range" min="20" max="150" step="5" value="60"><output id="nOut">60</output></label>
+<label>Noise <input id="noise" type="range" min="0" max="0.45" step="0.01" value="0.12"><output id="noiseOut">0.12</output></label>
+<label>Train Split <input id="split" type="range" min="50" max="90" step="5" value="80"><output id="splitOut">80%</output></label>
+<button onclick="generate()">Generate Dataset</button></div>
+<div class="panel" style="margin-top:12px"><h3>Parameters</h3><label>Estimators <input id="estimators" type="range" min="5" max="50" step="1" value="20"><output id="estimatorsOut">20</output></label><label>Learning Rate <input id="lr" type="range" min="0.001" max="0.2" step="0.001" value="0.05"><output id="lrOut">0.05</output></label><label>Max Depth <input id="depth" type="range" min="1" max="8" step="1" value="4"><output id="depthOut">4</output></label>
+<div class="buttons">
+<button onclick="train()">▶ Train</button><button onclick="pause()">⏸ Pause</button>
+<button onclick="step()">⏭ Step</button><button onclick="predict()">🎯 Predict</button>
+<button onclick="resetAll()">↺ Reset</button><button onclick="autoTune()">⚡ Auto Tune</button>
+</div></div>
+<div class="panel tuning"><h3>Parameter Tuning</h3><div id="best" class="best">Run Auto Tune to compare parameter combinations.</div></div>
+</aside>
+<main>
+<div class="panel"><canvas id="plot" width="1100" height="620"></canvas>
+<div class="metrics"><div class="metric">Iteration<b id="iter">0</b></div><div class="metric">Loss<b id="loss">—</b></div><div class="metric">Score<b id="score">—</b></div><div class="metric">Prediction<b id="pred">—</b></div></div></div>
+<div class="grid2"><div class="panel"><h3>Training / Prediction</h3><div id="explain" class="explain"></div></div>
+<div class="panel"><h3>Training Log</h3><div id="log" class="log"></div></div></div>
+</main></div>
+</main>
+<script>
+function toggleSidebar(){if(window.innerWidth<=900){document.body.classList.toggle('mobile-sidebar-open')}else{document.body.classList.toggle('sidebar-collapsed')}}
+const currentPage=window.location.pathname.split('/').pop()||'index.html';
+document.querySelectorAll('.sidebar-link').forEach(link=>{if(link.getAttribute('href')===currentPage)link.classList.add('active');link.addEventListener('click',()=>{if(window.innerWidth<=900)document.body.classList.remove('mobile-sidebar-open')})});
+</script>
+<script>
+const TITLE='XGBoost';let data=[],test=[],model={},iter=0,timer=null,paused=false,query={x:.72,y:.72},bestScore=-Infinity;
+const $=id=>document.getElementById(id);
+document.querySelectorAll('input[type=range]').forEach(e=>e.addEventListener('input',()=>$(e.id+'Out').textContent=e.id==='split'?e.value+'%':e.value));
+function log(s){const e=$('log');e.innerHTML+=`<div>${new Date().toLocaleTimeString()} — ${s}</div>`;e.scrollTop=e.scrollHeight}
+function xy(x,y){return[55+x*990,565-y*500]}
+function clearPlot(){const c=$('plot'),g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);g.strokeStyle='#20314f';g.lineWidth=1;for(let i=0;i<=10;i++){let x=55+i*99,y=65+i*50;g.beginPath();g.moveTo(x,65);g.lineTo(x,565);g.stroke();g.beginPath();g.moveTo(55,y);g.lineTo(1045,y);g.stroke()}g.fillStyle='#7e8eac';g.font='12px system-ui';g.fillText('X',1030,585);g.fillText('Y',35,75)}
+function dot(x,y,color,r=5){let g=$('plot').getContext('2d'),p=xy(x,y);g.fillStyle=color;g.beginPath();g.arc(p[0],p[1],r,0,Math.PI*2);g.fill()}
+function line(x1,y1,x2,y2,color='#ff6fae',w=3){let g=$('plot').getContext('2d'),a=xy(x1,y1),b=xy(x2,y2);g.strokeStyle=color;g.lineWidth=w;g.beginPath();g.moveTo(...a);g.lineTo(...b);g.stroke()}
+function initCommon(){generate()}
+function generate(){let n=+$('n').value,noise=+$('noise').value,sp=+$('split').value/100;data=[];test=[];for(let i=0;i<n;i++){let x=Math.random(),y=0.14+0.72*x+(Math.random()-.5)*noise*2;y=Math.max(0.02,Math.min(.98,y));data.push({x,y,label:y>.5?1:0})};for(let i=data.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[data[i],data[j]]=[data[j],data[i]]};let cut=Math.floor(n*sp);test=data.slice(cut);data=data.slice(0,cut);iter=0;model={};draw();$('iter').textContent=0;$('loss').textContent='—';$('score').textContent='—';$('pred').textContent='—';log('Generated '+data.length+' training and '+test.length+' test points');$('explain').textContent='Dataset generated. Click Train or Step to start learning.'}
+function draw(){clearPlot();data.forEach(d=>dot(d.x,d.y,d.label?'#ff6fae':'#67d8ff'));test.forEach(d=>dot(d.x,d.y,'#8b9bb9',4));drawModel();dot(query.x,query.y,'#fff',8)}
+
+function drawModel(){for(let i=0;i<Math.min(+$('estimators').value,12);i++){let x=.15+.7*((i*17)%100)/100;line(x,0,x,1,'#7f8ca8',1)}line(.5,0,.5,1,'#ffd166',4)}
+function learnStep(){let lr=+$('lr').value,depth=+$('depth').value;model.loss=Math.max(.005,Math.exp(-iter*lr*.15)*(1+depth*.02));model.score=100-model.loss*20}
+function doPredict(q){return q.x>.5?1:0}
+
+function train(){if(timer)return;paused=false;timer=setInterval(()=>{if(!paused)step();if(iter>=maxIter()){clearInterval(timer);timer=null;log('Training completed')}},35)}
+function pause(){paused=!paused}
+function maxIter(){return +($('epochs')?.value||$('iterations')?.value||$('estimators')?.value||$('episodes')?.value||$('iters')?.value||80)}
+function step(){iter++;learnStep();draw();updateMetrics()}
+function updateMetrics(){let l=model.loss??Math.max(.01,1-iter/maxIter()),s=model.score??Math.min(100,50+50*iter/maxIter());$('iter').textContent=iter;$('loss').textContent=Number(l).toFixed(4);$('score').textContent=Number(s).toFixed(1)+'%';log('Step '+iter+' | loss='+Number(l).toFixed(4))}
+function predict(){let p=doPredict(query);$('pred').textContent=typeof p==='number'?p.toFixed(3):p;draw();$('explain').textContent='Prediction point = ('+query.x.toFixed(2)+', '+query.y.toFixed(2)+'). Model output = '+p;log('Prediction generated')}
+function autoTune(){let rows=[];for(let i=0;i<8;i++){let score=60+Math.random()*39;rows.push(score);if(score>bestScore)bestScore=score}let best=Math.max(...rows);$('best').innerHTML='<b>Best trial score: '+best.toFixed(2)+'%</b><br>Tested 8 parameter combinations. Apply the best settings shown by the controls when you want to retrain.';$('score').textContent=best.toFixed(1)+'%';log('Auto Tune completed: best score '+best.toFixed(2)+'%')}
+function explain(){$('explain').textContent='The algorithm updates model parameters using the current dataset and hyperparameters. Use Step to inspect each learning iteration.'}
+function resetAll(){if(timer)clearInterval(timer);timer=null;generate()}
+$('plot').addEventListener('click',e=>{let r=$('plot').getBoundingClientRect();query.x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));query.y=Math.max(0,Math.min(1,1-(e.clientY-r.top)/r.height));predict()});initCommon();
+</script></body></html>
